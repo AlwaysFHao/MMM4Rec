@@ -1,0 +1,28 @@
+seed: 2020
+logger: 'GRU4Rec-Scientific'
+
+# model_config
+embedding_size: 64
+hidden_size: 128
+dropout_prob: 0.4
+num_layers: 2
+initializer_range: 0.02
+
+# dataset config
+batch_size: 2048
+dataset_path: './dataset/amazon-2018/processed/Scientific'
+max_len: 50
+
+# trainer config
+Epoch: 100
+optimizer_lr: 0.001
+weight_decay: 0.0
+stop_epoch: 10
+shuffle: False
+#checkpoint: 'saved/SASRec/test/best_epoch_model.ckpt'
+
+# eval config
+top_k: [10, 20, 50]
+metrics: ['Hit', 'NDCG']
+valid_metric: 'NDCG@10'
+metrics_table_displays: True

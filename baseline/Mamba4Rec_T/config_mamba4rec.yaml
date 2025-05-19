@@ -1,0 +1,31 @@
+seed: 2020
+logger: 'Mamba4Rec-Scientific'
+
+# model_config
+hidden_size: 64                 # (int) Number of features in the hidden state.
+num_layers: 2                  # (int) Number of Mamba layers.
+dropout_prob: 0.4            # (float) Dropout rate.
+loss_type: 'CE'                 # (str) Type of loss function. Range in ['BPR', 'CE'].
+
+d_state: 32                     # (int) SSM state expansion factor
+d_conv: 4                       # (int) Local convolution width
+expand: 2                       # (int) Block expansion factor
+
+# dataset config
+batch_size: 2048
+dataset_path: './dataset/amazon-2018/processed/Scientific'
+max_len: 20
+text_embed_path: 'dataset/amazon-2018/processed/Scientific/text_feat.pth'
+
+# trainer config
+Epoch: 100
+optimizer_lr: 0.001
+weight_decay: 0.0
+stop_epoch: 10
+shuffle: False
+
+# eval config
+top_k: [10, 20, 50]
+metrics: ['Hit', 'NDCG']
+valid_metric: 'NDCG@10'
+metrics_table_displays: True

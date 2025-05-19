@@ -1,0 +1,43 @@
+seed: 2020
+logger: 'TiM4Rec-Scientific'
+
+# model_config
+hidden_size: 64                 # (int) Number of features in the hidden state.
+num_layers: 2                 # (int) Number of TiSSD layers.
+dropout_prob: 0.4            # (float) Dropout rate.
+time_drop_out: 0.4
+loss_type: 'CE'                 # (str) Type of loss function. Range in ['BPR', 'CE'].
+
+
+d_state: 32                     # (int) SSD state expansion factor
+d_conv: 4                       # (int) Local convolution width
+expand: 2                       # (int) Block expansion factor
+n_groups: 1
+head_dim: 32                   # (int) Number of SSD heads
+chunk_size: 32                 # (int) Size of SSD Chunk
+norm_eps: 1e-12
+
+is_ffn: True
+is_time: True
+p2p_residual: True
+is_kai_ming_init: False
+
+# dataset config
+batch_size: 2048
+dataset_path: './dataset/amazon-2018/processed/Scientific'
+max_len: 20
+text_embed_path: 'dataset/amazon-2018/processed/Scientific/text_feat.pth'
+
+
+# trainer config
+Epoch: 100
+optimizer_lr: 0.001
+weight_decay: 0.0
+stop_epoch: 10
+shuffle: False
+
+# eval config
+top_k: [10, 20, 50]
+metrics: ['Hit', 'NDCG']
+valid_metric: 'NDCG@10'
+metrics_table_displays: True

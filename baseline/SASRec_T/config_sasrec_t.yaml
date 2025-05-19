@@ -1,0 +1,34 @@
+seed: 2020
+logger: 'SASRecT-Scientific'
+
+# model_config
+hidden_size: 256
+inner_size: 1024
+hidden_dropout_prob: 0.4
+att_dropout_prob: 0.4
+n_heads: 4
+n_layers: 2
+layer_norm_eps: 1e-12
+initializer_range: 0.02
+hidden_act: 'gelu'
+text_embed_path: 'dataset/amazon-2018/processed/Scientific/text_feat.pth'
+model_compile: True
+
+# dataset config
+batch_size: 512
+accumulation_steps: 8
+dataset_path: './dataset/amazon-2018/processed/Scientific'
+max_len: 50
+
+# trainer config
+Epoch: 100
+optimizer_lr: 0.00025
+weight_decay: 0.001
+stop_epoch: 10
+shuffle: False
+
+# eval config
+top_k: [10, 20, 50]
+metrics: ['Hit', 'NDCG']
+valid_metric: 'NDCG@10'
+metrics_table_displays: True

@@ -1,0 +1,4 @@
+/dataset/amazon-2018/processed/*
+/dataset/amazon-2018/raw/*
+/saved/*
+!*.gitkeep

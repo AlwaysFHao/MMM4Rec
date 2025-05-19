@@ -1,0 +1,62 @@
+seed: 2020
+logger: 'MMM4Rec-FHCKM'
+
+# mmm4rec settings
+hidden_size: 256                 # (int) Number of features in the hidden state.
+inner_size: 256
+num_layers: 2                 # (int) Number of TiSSD layers.
+embedding_drop_prob: 0.4            # (float) Dropout rate.
+dropout_prob: 0.4            # (float) Dropout rate.
+time_dropout_prob: 0.4
+loss_type: 'CE'                 # (str) Type of loss function. Range in ['BPR', 'CE'].
+
+d_state: 64                     # (int) SSD state expansion factor
+n_groups: 8                     # (int) SSD state expansion factor
+d_conv: 4                      # (int) Local convolution width
+expand: 2                       # (int) Block expansion factor
+head_dim: 64                   # (int) Number of SSD heads
+chunk_size: 32                 # (int) Size of SSD Chunk
+norm_eps: 1e-12
+model_compile: False
+
+is_ffn: True
+is_time: True
+p2p_residual: False
+is_kai_ming_init: False
+
+is_modality_bias: True
+text_embed_path: 'dataset/amazon-2018/processed/FHCKM/text_feat.pth'
+vision_embed_path: 'dataset/amazon-2018/processed/FHCKM/image_feat.pth'
+
+item_mm_fusion: 'static'  # ['dynamic_shared', 'dynamic_instance', 'static']
+
+# dataset config
+batch_size: 1024
+accumulation_steps: 8
+dataset_path: './dataset/amazon-2018/processed/FHCKM'
+max_len: 20
+shuffle: True
+large_file_mode: True
+is_linecache: False
+is_scheduler: False
+
+save_step: 5
+
+# trainer config
+Epoch: 100
+optimizer_lr: 0.00025
+weight_decay: 0.005
+in_batch_loss: True
+#stop_epoch: 10
+temperature: 0.8
+#checkpoint: ''
+return_scores: False
+light_save: True
+
+# eval config
+top_k: [10, 20, 50]
+metrics: ['Hit', 'NDCG']
+valid_metric: 'Hit@10'
+metrics_table_displays: True
+
+is_pbar: True

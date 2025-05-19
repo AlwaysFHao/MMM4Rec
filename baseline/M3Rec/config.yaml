@@ -1,0 +1,32 @@
+seed: 2021
+logger: 'M3Rec-Scientific'
+
+hidden_size: 256                # (int) Number of features in the hidden state.
+num_layers: 2                   # (int) Number of Mamba layers.
+dropout_prob: 0.5             # (float) Dropout rate.0.2
+loss_type: 'CE'                 # (str) Type of loss function. Range in ['BPR', 'CE'].
+
+d_state: 32                     # (int) SSM state expansion factor
+d_conv: 4                       # (int) Local convolution width
+expand: 2                       # (int) Block expansion factor
+
+# dataset config
+batch_size: 512
+accumulation_steps: 4
+dataset_path: './dataset/amazon-2018/processed/Scientific'
+text_embed_path: 'dataset/amazon-2018/processed/Scientific/text_feat.pth'
+vision_embed_path: 'dataset/amazon-2018/processed/Scientific/image_feat.pth'
+max_len: 50
+
+# trainer config
+Epoch: 100
+optimizer_lr: 0.001
+weight_decay: 0.0
+stop_epoch: 5
+shuffle: False
+
+# eval config
+top_k: [10, 20, 50]
+metrics: ['Hit', 'NDCG']
+valid_metric: 'NDCG@10'
+metrics_table_displays: True

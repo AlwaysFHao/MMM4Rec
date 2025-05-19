@@ -1,0 +1,1353 @@
+Config: 
+seed = 2020 
+logger = MMM4Rec-Arts 
+hidden_size = 256 
+inner_size = 256 
+num_layers = 1 
+embedding_drop_prob = 0.4 
+dropout_prob = 0.4 
+time_dropout_prob = 0.4 
+loss_type = CE 
+d_state = 64 
+n_groups = 8 
+d_conv = 4 
+expand = 2 
+head_dim = 64 
+chunk_size = 32 
+norm_eps = 1e-12 
+model_compile = False 
+large_file_mode = False 
+is_linecache = False 
+float32_precise = none 
+is_ffn = True 
+is_time = True 
+p2p_residual = False 
+is_kai_ming_init = False 
+is_modality_bias = False 
+text_embed_path = dataset/amazon-2018/processed/Arts/text_feat.pth 
+vision_embed_path = dataset/amazon-2018/processed/Arts/image_feat.pth 
+item_mm_fusion = static 
+batch_size = 1024 
+accumulation_steps = 8 
+dataset_path = ./dataset/amazon-2018/processed/Arts 
+max_len = 20 
+shuffle = True 
+Epoch = 100 
+optimizer_lr = 0.0001 
+weight_decay = 0.005 
+stop_epoch = 10 
+temperature = 0.8 
+pretrain_checkpoint = saved/MMM4Rec/FHCKM/2025-05-08_16-47-00/the_40_epoch_model.ckpt 
+top_k = [10, 20, 50] 
+metrics = ['Hit', 'NDCG'] 
+valid_metric = NDCG@10 
+metrics_table_displays = True 
+is_pbar = True 
+user_num = 45486 
+item_num = 21019 
+
+MMM4Rec(
+  (vision_in_layer_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+  (text_in_layer_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+  (layer_norm_time): LayerNorm((20,), eps=1e-12, elementwise_affine=True)
+  (embedding_dropout): Dropout(p=0.4, inplace=False)
+  (time_dropout): Dropout(p=0.4, inplace=False)
+  (text_adapter): Sequential(
+    (0): Linear(in_features=768, out_features=256, bias=True)
+  )
+  (vision_adapter): Sequential(
+    (0): Linear(in_features=768, out_features=256, bias=True)
+  )
+  (encoder_ssd_layers): ModuleList(
+    (0): TiSSDLayer(
+      (ssd): TiSSD(
+        (in_proj): Linear(in_features=256, out_features=2056, bias=True)
+        (conv1d_1): Conv1d(1536, 1536, kernel_size=(4,), stride=(1,), padding=(3,), groups=1536)
+        (conv1d4time_1): Conv1d(8, 8, kernel_size=(4,), stride=(1,), padding=(3,), groups=8)
+        (conv1d4time_2): Conv1d(8, 8, kernel_size=(4,), stride=(1,), padding=(3,), groups=8)
+        (mlp4time_scale): Sequential(
+          (0): Dropout(p=0.4, inplace=False)
+          (1): Linear(in_features=20, out_features=20, bias=True)
+          (2): SiLU(inplace=True)
+          (3): Linear(in_features=20, out_features=20, bias=True)
+          (4): Tanhshrink()
+        )
+        (time_gate_residual): Sequential(
+          (0): Dropout(p=0.4, inplace=False)
+          (1): Linear(in_features=20, out_features=1, bias=True)
+          (2): Sigmoid()
+        )
+        (time_layer_norm): LayerNorm((20,), eps=1e-12, elementwise_affine=True)
+        (norm): RMSNorm()
+        (out_proj): Linear(in_features=512, out_features=256, bias=True)
+      )
+      (dropout): Dropout(p=0.4, inplace=False)
+      (layer_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+      (ffn): FeedForward(
+        (fc1): Linear(in_features=256, out_features=256, bias=True)
+        (fc2): Linear(in_features=256, out_features=256, bias=True)
+        (dropout): Dropout(p=0.4, inplace=False)
+        (act): Hardswish()
+        (layer_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+      )
+    )
+  )
+  (decoder_ssd_layers): ModuleList(
+    (0): CoTiSSDLayer(
+      (ssd): TiSSD(
+        (in_proj): Linear(in_features=256, out_features=2056, bias=True)
+        (conv1d_1): Conv1d(1536, 1536, kernel_size=(4,), stride=(1,), padding=(3,), groups=1536)
+        (conv1d4time_1): Conv1d(8, 8, kernel_size=(4,), stride=(1,), padding=(3,), groups=8)
+        (conv1d4time_2): Conv1d(8, 8, kernel_size=(4,), stride=(1,), padding=(3,), groups=8)
+        (mlp4time_scale): Sequential(
+          (0): Dropout(p=0.4, inplace=False)
+          (1): Linear(in_features=20, out_features=20, bias=True)
+          (2): SiLU(inplace=True)
+          (3): Linear(in_features=20, out_features=20, bias=True)
+          (4): Tanhshrink()
+        )
+        (time_gate_residual): Sequential(
+          (0): Dropout(p=0.4, inplace=False)
+          (1): Linear(in_features=20, out_features=1, bias=True)
+          (2): Sigmoid()
+        )
+        (time_layer_norm): LayerNorm((20,), eps=1e-12, elementwise_affine=True)
+        (norm): RMSNorm()
+        (out_proj): Linear(in_features=512, out_features=256, bias=True)
+      )
+      (co_ssd): CoTiSSD(
+        (u_in_proj): Linear(in_features=256, out_features=1032, bias=True)
+        (z_in_proj): Linear(in_features=256, out_features=512, bias=True)
+        (q_in_proj): Linear(in_features=256, out_features=512, bias=True)
+        (u_conv1d): Conv1d(1024, 1024, kernel_size=(4,), stride=(1,), padding=(3,), groups=1024)
+        (q_conv1d): Conv1d(512, 512, kernel_size=(4,), stride=(1,), padding=(3,), groups=512)
+        (conv1d4time_1): Conv1d(8, 8, kernel_size=(4,), stride=(1,), padding=(3,), groups=8)
+        (conv1d4time_2): Conv1d(8, 8, kernel_size=(4,), stride=(1,), padding=(3,), groups=8)
+        (mlp4time_scale): Sequential(
+          (0): Dropout(p=0.4, inplace=False)
+          (1): Linear(in_features=20, out_features=20, bias=True)
+          (2): SiLU(inplace=True)
+          (3): Linear(in_features=20, out_features=20, bias=True)
+          (4): Tanhshrink()
+        )
+        (norm): RMSNorm()
+        (out_proj): Linear(in_features=512, out_features=256, bias=True)
+      )
+      (dropout): Dropout(p=0.4, inplace=False)
+      (layer_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+      (co_layer_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+      (vision_complex_weight): Sequential(
+        (0): ComplexLinear(
+          (real): Linear(in_features=11, out_features=11, bias=True)
+          (imag): Linear(in_features=11, out_features=11, bias=True)
+        )
+      )
+      (text_complex_weight): Sequential(
+        (0): ComplexLinear(
+          (real): Linear(in_features=11, out_features=11, bias=True)
+          (imag): Linear(in_features=11, out_features=11, bias=True)
+        )
+      )
+      (co_complex_weight): Sequential(
+        (0): ComplexLinear(
+          (real): Linear(in_features=11, out_features=11, bias=True)
+          (imag): Linear(in_features=11, out_features=11, bias=True)
+        )
+      )
+      (ffn): FeedForward(
+        (fc1): Linear(in_features=256, out_features=256, bias=True)
+        (fc2): Linear(in_features=256, out_features=256, bias=True)
+        (dropout): Dropout(p=0.4, inplace=False)
+        (act): Hardswish()
+        (layer_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+      )
+    )
+  )
+  (loss_fct): CrossEntropyLoss()
+)
+Class code for 'MMM4Rec' saved to '/home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/model_code/MMM4Rec.py'.
+Class code for 'TiSSD' saved to '/home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/model_code/TiSSD.py'.
+Class code for 'TiSSDLayer' saved to '/home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/model_code/TiSSDLayer.py'.
+Class code for 'CoTiSSD' saved to '/home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/model_code/CoTiSSD.py'.
+Class code for 'CoTiSSDLayer' saved to '/home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/model_code/CoTiSSDLayer.py'.
+Class code for 'FeedForward' saved to '/home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/model_code/FeedForward.py'.
+load pretrained weights from: saved/MMM4Rec/FHCKM/2025-05-08_16-47-00/the_40_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 1, Training Time 15.39595s, 
+Training Total Loss 2210.93994140625, Training Mean Loss 8.738893508911133, GPU RAM: 3.23 G/23.63 G
+Validation Epoch 1, Validation Time 1.52740s 
+╒═══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│    Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞═══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.0873675 │ 0.118718 │ 0.174647 │ 0.0434439 │ 0.0513405 │ 0.0623927 │
+╘═══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 2, Training Time 14.89393s, 
+Training Total Loss 2144.22900390625, Training Mean Loss 8.475214004516602, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 2, Validation Time 1.02519s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.100361 │  0.13613 │ 0.198237 │ 0.0503648 │ 0.0593738 │ 0.0716417 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 3, Training Time 14.92089s, 
+Training Total Loss 2110.158203125, Training Mean Loss 8.340546607971191, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 3, Validation Time 1.03942s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.108781 │ 0.148507 │ 0.214484 │  0.055974 │ 0.0659881 │  0.079019 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 4, Training Time 14.94016s, 
+Training Total Loss 2084.998779296875, Training Mean Loss 8.24110221862793, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 4, Validation Time 1.02560s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.114497 │ 0.156883 │ 0.224377 │ 0.0603369 │ 0.0710103 │ 0.0843551 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 5, Training Time 14.93046s, 
+Training Total Loss 2065.126953125, Training Mean Loss 8.162557601928711, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 5, Validation Time 1.01959s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.118542 │ 0.161412 │ 0.230488 │ 0.0624909 │ 0.0732734 │ 0.0869455 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 6, Training Time 14.93154s, 
+Training Total Loss 2050.27783203125, Training Mean Loss 8.103865623474121, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 6, Validation Time 1.01992s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.120147 │ 0.164028 │  0.23449 │ 0.0649554 │ 0.0760123 │ 0.0899757 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 7, Training Time 14.93599s, 
+Training Total Loss 2038.4127197265625, Training Mean Loss 8.056967735290527, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 7, Validation Time 1.01774s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.122082 │ 0.167018 │ 0.238843 │  0.066644 │ 0.0779525 │ 0.0921685 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 8, Training Time 14.93424s, 
+Training Total Loss 2029.0362548828125, Training Mean Loss 8.019906044006348, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 8, Validation Time 1.43512s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.123818 │  0.16825 │ 0.241151 │ 0.0677801 │ 0.0789709 │ 0.0934025 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 9, Training Time 14.53764s, 
+Training Total Loss 2021.5279541015625, Training Mean Loss 7.990229606628418, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 9, Validation Time 1.44066s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.125621 │  0.17091 │ 0.243767 │ 0.0689393 │ 0.0803186 │ 0.0947184 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 10, Training Time 14.97130s, 
+Training Total Loss 2014.978759765625, Training Mean Loss 7.964343070983887, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 10, Validation Time 1.03049s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.126456 │ 0.172361 │ 0.244823 │ 0.0702808 │ 0.0818476 │ 0.0961746 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 11, Training Time 14.93992s, 
+Training Total Loss 2009.002685546875, Training Mean Loss 7.940722465515137, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 11, Validation Time 1.02220s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.127776 │ 0.171767 │ 0.245988 │  0.070759 │ 0.0818312 │ 0.0965201 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 12, Training Time 14.95810s, 
+Training Total Loss 2004.53662109375, Training Mean Loss 7.923069953918457, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 12, Validation Time 1.01870s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.128545 │  0.17269 │ 0.248736 │ 0.0716269 │ 0.0827582 │ 0.0978057 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 13, Training Time 14.93707s, 
+Training Total Loss 1999.92626953125, Training Mean Loss 7.904847145080566, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 13, Validation Time 1.01776s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.128919 │ 0.173988 │ 0.250055 │ 0.0720193 │ 0.0833663 │ 0.0983929 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 14, Training Time 14.94028s, 
+Training Total Loss 1995.030029296875, Training Mean Loss 7.885494709014893, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 14, Validation Time 1.01566s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.129205 │ 0.174889 │ 0.251726 │ 0.0732785 │ 0.0848031 │ 0.0999728 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 15, Training Time 14.93409s, 
+Training Total Loss 1991.292236328125, Training Mean Loss 7.870720386505127, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 15, Validation Time 1.01687s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.130502 │  0.17568 │ 0.251066 │ 0.0731126 │ 0.0845212 │  0.099441 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 16, Training Time 14.94532s, 
+Training Total Loss 1988.5850830078125, Training Mean Loss 7.860020637512207, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 16, Validation Time 1.01589s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.130612 │ 0.175812 │  0.25188 │ 0.0738169 │  0.085236 │  0.100289 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 17, Training Time 14.92637s, 
+Training Total Loss 1984.850341796875, Training Mean Loss 7.845258712768555, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 17, Validation Time 1.02561s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.131249 │ 0.176076 │ 0.252693 │ 0.0743316 │ 0.0856652 │  0.100824 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 18, Training Time 14.93603s, 
+Training Total Loss 1982.059326171875, Training Mean Loss 7.834227085113525, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 18, Validation Time 1.02070s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.132041 │ 0.177263 │ 0.253089 │ 0.0748034 │ 0.0862003 │  0.101205 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 19, Training Time 14.94967s, 
+Training Total Loss 1979.1337890625, Training Mean Loss 7.822663307189941, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 19, Validation Time 1.02295s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.131733 │ 0.177857 │ 0.253595 │ 0.0749251 │ 0.0865377 │  0.101506 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 20, Training Time 14.93480s, 
+Training Total Loss 1976.646728515625, Training Mean Loss 7.812833309173584, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 20, Validation Time 1.01772s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.131557 │ 0.177681 │ 0.253419 │ 0.0751032 │ 0.0867329 │   0.10173 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 21, Training Time 14.93675s, 
+Training Total Loss 1973.8472900390625, Training Mean Loss 7.8017683029174805, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 21, Validation Time 1.43419s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.133316 │ 0.178451 │ 0.254342 │ 0.0758609 │ 0.0872238 │   0.10224 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 22, Training Time 14.55136s, 
+Training Total Loss 1971.385498046875, Training Mean Loss 7.7920379638671875, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 22, Validation Time 1.43692s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.133953 │  0.17878 │ 0.255243 │ 0.0758617 │ 0.0871467 │  0.102282 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 23, Training Time 14.94475s, 
+Training Total Loss 1968.89208984375, Training Mean Loss 7.782182693481445, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 23, Validation Time 1.01835s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.133843 │ 0.178538 │ 0.256584 │ 0.0761717 │ 0.0874504 │  0.102902 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 24, Training Time 14.93838s, 
+Training Total Loss 1966.32177734375, Training Mean Loss 7.7720232009887695, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 24, Validation Time 1.02148s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.133865 │ 0.178692 │ 0.255463 │ 0.0760742 │ 0.0873788 │  0.102575 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 25, Training Time 14.95239s, 
+Training Total Loss 1964.247802734375, Training Mean Loss 7.763825416564941, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 25, Validation Time 1.02825s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.134437 │ 0.179396 │ 0.256804 │  0.076473 │ 0.0878061 │  0.103119 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 26, Training Time 14.92584s, 
+Training Total Loss 1962.3433837890625, Training Mean Loss 7.756298065185547, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 26, Validation Time 1.02869s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.133667 │ 0.179682 │ 0.256189 │  0.076528 │ 0.0880945 │  0.103232 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 27, Training Time 14.94421s, 
+Training Total Loss 1960.340087890625, Training Mean Loss 7.748380184173584, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 27, Validation Time 1.02680s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.134107 │ 0.180363 │ 0.256496 │ 0.0767567 │ 0.0884351 │  0.103507 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 28, Training Time 14.94253s, 
+Training Total Loss 1958.5028076171875, Training Mean Loss 7.74111795425415, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 28, Validation Time 1.01712s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.134371 │ 0.180825 │  0.25764 │  0.076915 │ 0.0886125 │  0.103815 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 29, Training Time 14.93505s, 
+Training Total Loss 1956.5084228515625, Training Mean Loss 7.7332353591918945, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 29, Validation Time 1.01856s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.135448 │ 0.180407 │ 0.258277 │ 0.0772893 │ 0.0886294 │  0.104063 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 30, Training Time 14.93750s, 
+Training Total Loss 1954.9390869140625, Training Mean Loss 7.72703218460083, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 30, Validation Time 1.42347s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.134899 │ 0.180539 │ 0.257046 │ 0.0772051 │ 0.0887126 │  0.103885 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 31, Training Time 14.54856s, 
+Training Total Loss 1952.5810546875, Training Mean Loss 7.717711925506592, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 31, Validation Time 1.43779s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.135536 │ 0.180605 │ 0.257464 │ 0.0778022 │ 0.0891522 │  0.104363 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 32, Training Time 14.54907s, 
+Training Total Loss 1950.99462890625, Training Mean Loss 7.711441516876221, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 32, Validation Time 1.43201s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.135228 │ 0.181023 │ 0.258739 │ 0.0775161 │ 0.0890741 │  0.104452 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 33, Training Time 14.93230s, 
+Training Total Loss 1949.94873046875, Training Mean Loss 7.7073073387146, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 33, Validation Time 1.01932s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136064 │ 0.182078 │ 0.258981 │ 0.0781974 │ 0.0897973 │  0.105005 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 34, Training Time 14.93514s, 
+Training Total Loss 1948.0927734375, Training Mean Loss 7.699971675872803, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 34, Validation Time 1.01845s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136042 │  0.18199 │ 0.258497 │ 0.0780917 │ 0.0896867 │  0.104827 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 35, Training Time 14.94622s, 
+Training Total Loss 1945.87353515625, Training Mean Loss 7.691200256347656, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 35, Validation Time 1.01669s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136701 │  0.18177 │ 0.258563 │ 0.0784696 │  0.089819 │  0.105033 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 36, Training Time 14.93437s, 
+Training Total Loss 1945.02099609375, Training Mean Loss 7.687830448150635, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 36, Validation Time 1.02542s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│  0.13602 │  0.18221 │ 0.258871 │ 0.0783929 │ 0.0900426 │   0.10521 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 37, Training Time 14.93977s, 
+Training Total Loss 1943.7718505859375, Training Mean Loss 7.682892799377441, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 37, Validation Time 1.01667s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136328 │ 0.181462 │ 0.257969 │ 0.0784316 │ 0.0898018 │  0.104955 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 38, Training Time 14.93288s, 
+Training Total Loss 1942.071044921875, Training Mean Loss 7.676170349121094, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 38, Validation Time 1.01724s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137141 │ 0.182188 │ 0.258981 │ 0.0788696 │ 0.0902268 │  0.105405 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 39, Training Time 14.94156s, 
+Training Total Loss 1940.2652587890625, Training Mean Loss 7.669033050537109, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 39, Validation Time 1.42929s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136548 │ 0.182122 │ 0.258211 │ 0.0788126 │  0.090305 │  0.105372 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 40, Training Time 14.55039s, 
+Training Total Loss 1939.00048828125, Training Mean Loss 7.664033889770508, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 40, Validation Time 1.43742s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137273 │ 0.182254 │ 0.259552 │ 0.0792262 │ 0.0905679 │  0.105869 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 41, Training Time 14.55585s, 
+Training Total Loss 1938.135986328125, Training Mean Loss 7.660616874694824, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 41, Validation Time 1.43928s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137625 │ 0.183133 │ 0.259486 │ 0.0789639 │ 0.0904221 │  0.105511 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 42, Training Time 14.95145s, 
+Training Total Loss 1935.8084716796875, Training Mean Loss 7.651417255401611, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 42, Validation Time 1.03567s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137097 │  0.18243 │ 0.258827 │ 0.0788694 │ 0.0902948 │  0.105418 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 43, Training Time 14.93750s, 
+Training Total Loss 1934.9765625, Training Mean Loss 7.648128986358643, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 43, Validation Time 1.03610s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136328 │   0.1821 │ 0.259464 │ 0.0790423 │  0.090598 │  0.105908 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 3 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 44, Training Time 14.95932s, 
+Training Total Loss 1933.919189453125, Training Mean Loss 7.643949508666992, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 44, Validation Time 1.01779s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136811 │ 0.181792 │ 0.259662 │ 0.0792723 │  0.090633 │  0.106058 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 45, Training Time 14.92870s, 
+Training Total Loss 1932.182861328125, Training Mean Loss 7.637086868286133, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 45, Validation Time 1.04515s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136701 │  0.18276 │ 0.259289 │  0.079517 │ 0.0911438 │  0.106317 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 46, Training Time 14.93178s, 
+Training Total Loss 1931.264892578125, Training Mean Loss 7.633458614349365, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 46, Validation Time 1.02243s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137713 │ 0.182825 │ 0.259772 │ 0.0801929 │ 0.0915492 │  0.106769 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 47, Training Time 14.93956s, 
+Training Total Loss 1930.157958984375, Training Mean Loss 7.629083156585693, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 47, Validation Time 1.02793s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137449 │ 0.182012 │ 0.257948 │ 0.0794246 │ 0.0906675 │  0.105726 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 48, Training Time 14.92906s, 
+Training Total Loss 1928.548583984375, Training Mean Loss 7.622722148895264, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 48, Validation Time 1.01776s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137625 │  0.18232 │ 0.259442 │ 0.0802281 │ 0.0914912 │  0.106764 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 49, Training Time 14.92539s, 
+Training Total Loss 1927.4151611328125, Training Mean Loss 7.618242263793945, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 49, Validation Time 1.42413s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137779 │ 0.182584 │ 0.258343 │ 0.0805772 │ 0.0918636 │  0.106887 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 50, Training Time 14.56141s, 
+Training Total Loss 1926.608642578125, Training Mean Loss 7.615054130554199, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 50, Validation Time 1.43596s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137405 │ 0.183045 │ 0.259311 │ 0.0803098 │    0.0918 │  0.106907 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 51, Training Time 14.91717s, 
+Training Total Loss 1925.328369140625, Training Mean Loss 7.609993934631348, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 51, Validation Time 1.02822s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138086 │ 0.182584 │ 0.259245 │ 0.0804168 │ 0.0916606 │  0.106827 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 52, Training Time 14.92414s, 
+Training Total Loss 1924.7884521484375, Training Mean Loss 7.6078596115112305, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 52, Validation Time 1.01592s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138658 │  0.18276 │  0.25964 │ 0.0809291 │ 0.0920471 │  0.107285 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 53, Training Time 14.94369s, 
+Training Total Loss 1923.47265625, Training Mean Loss 7.602659225463867, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 53, Validation Time 1.01437s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137471 │ 0.182496 │ 0.259838 │ 0.0801075 │ 0.0914713 │  0.106794 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 54, Training Time 14.93267s, 
+Training Total Loss 1922.0809326171875, Training Mean Loss 7.597157955169678, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 54, Validation Time 1.01898s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│  0.13824 │ 0.183001 │ 0.258695 │ 0.0807088 │ 0.0920183 │  0.107016 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 55, Training Time 14.95885s, 
+Training Total Loss 1921.6004638671875, Training Mean Loss 7.595259189605713, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 55, Validation Time 1.01685s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137735 │ 0.183749 │ 0.259728 │ 0.0805282 │ 0.0921428 │  0.107178 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 3 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 56, Training Time 14.93871s, 
+Training Total Loss 1920.1468505859375, Training Mean Loss 7.589513778686523, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 56, Validation Time 1.02695s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138372 │ 0.183221 │ 0.260036 │ 0.0807307 │  0.092035 │  0.107238 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 4 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 57, Training Time 14.94011s, 
+Training Total Loss 1919.411376953125, Training Mean Loss 7.586606502532959, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 57, Validation Time 1.02455s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137911 │ 0.182957 │  0.25964 │ 0.0807525 │ 0.0920928 │  0.107262 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 5 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 58, Training Time 14.93149s, 
+Training Total Loss 1918.410400390625, Training Mean Loss 7.582650184631348, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 58, Validation Time 1.01956s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137713 │ 0.182232 │ 0.259355 │ 0.0810341 │  0.092278 │  0.107562 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 59, Training Time 15.32223s, 
+Training Total Loss 1917.559814453125, Training Mean Loss 7.579288005828857, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 59, Validation Time 1.02342s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138812 │ 0.183485 │ 0.259486 │ 0.0810668 │ 0.0923079 │  0.107354 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 60, Training Time 14.95791s, 
+Training Total Loss 1916.062744140625, Training Mean Loss 7.573370933532715, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 60, Validation Time 1.02459s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137713 │ 0.183045 │ 0.259245 │ 0.0810049 │ 0.0924506 │   0.10755 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 61, Training Time 14.92936s, 
+Training Total Loss 1915.318603515625, Training Mean Loss 7.570429801940918, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 61, Validation Time 1.02514s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137515 │ 0.183463 │ 0.258849 │ 0.0809958 │ 0.0925791 │  0.107506 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 62, Training Time 14.93111s, 
+Training Total Loss 1914.36572265625, Training Mean Loss 7.5666632652282715, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 62, Validation Time 1.01658s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137449 │ 0.183507 │ 0.258981 │ 0.0811666 │ 0.0927864 │  0.107724 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 63, Training Time 14.93361s, 
+Training Total Loss 1913.7601318359375, Training Mean Loss 7.564269542694092, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 63, Validation Time 1.02972s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137823 │ 0.183331 │ 0.259179 │  0.081444 │ 0.0929275 │  0.107946 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 64, Training Time 14.94323s, 
+Training Total Loss 1912.2576904296875, Training Mean Loss 7.55833101272583, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 64, Validation Time 1.02072s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138394 │ 0.182979 │ 0.258277 │ 0.0813699 │ 0.0925972 │  0.107503 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 65, Training Time 14.93694s, 
+Training Total Loss 1911.4814453125, Training Mean Loss 7.555263042449951, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 65, Validation Time 1.02550s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138394 │ 0.183089 │ 0.258849 │ 0.0813214 │ 0.0925861 │  0.107589 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 66, Training Time 14.93383s, 
+Training Total Loss 1910.6702880859375, Training Mean Loss 7.552056789398193, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 66, Validation Time 1.02594s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138284 │ 0.184123 │ 0.258541 │  0.081584 │ 0.0931426 │   0.10788 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 67, Training Time 14.92940s, 
+Training Total Loss 1909.821044921875, Training Mean Loss 7.548699855804443, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 67, Validation Time 1.42804s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138152 │ 0.183573 │ 0.259047 │ 0.0817605 │ 0.0932024 │  0.108155 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 68, Training Time 14.60728s, 
+Training Total Loss 1909.3720703125, Training Mean Loss 7.5469255447387695, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 68, Validation Time 1.43326s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138174 │ 0.183397 │ 0.258981 │ 0.0815189 │ 0.0929195 │  0.107883 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 69, Training Time 14.92973s, 
+Training Total Loss 1908.4053955078125, Training Mean Loss 7.543104648590088, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 69, Validation Time 1.01920s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137757 │ 0.182803 │ 0.258629 │ 0.0813976 │ 0.0927679 │  0.107785 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 70, Training Time 14.94079s, 
+Training Total Loss 1906.9215087890625, Training Mean Loss 7.5372395515441895, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 70, Validation Time 1.02706s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138042 │ 0.182847 │ 0.259025 │ 0.0814796 │ 0.0927794 │  0.107872 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 3 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 71, Training Time 14.92910s, 
+Training Total Loss 1906.15625, Training Mean Loss 7.534214496612549, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 71, Validation Time 1.01803s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137691 │ 0.183309 │ 0.258475 │ 0.0815878 │ 0.0931041 │  0.107971 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 4 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 72, Training Time 14.93725s, 
+Training Total Loss 1905.39453125, Training Mean Loss 7.531203746795654, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 72, Validation Time 1.02910s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138504 │ 0.183881 │ 0.259267 │ 0.0821967 │ 0.0936451 │   0.10856 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 73, Training Time 14.93984s, 
+Training Total Loss 1905.2249755859375, Training Mean Loss 7.530533790588379, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 73, Validation Time 1.01597s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137779 │ 0.182782 │ 0.258497 │ 0.0818351 │ 0.0932168 │  0.108219 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 74, Training Time 14.94342s, 
+Training Total Loss 1903.899169921875, Training Mean Loss 7.525293350219727, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 74, Validation Time 1.01584s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│   0.1389 │  0.18276 │ 0.258497 │ 0.0823165 │ 0.0933759 │  0.108392 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 75, Training Time 14.93849s, 
+Training Total Loss 1903.2777099609375, Training Mean Loss 7.522837162017822, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 75, Validation Time 1.02588s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138988 │ 0.183177 │ 0.258431 │ 0.0821867 │ 0.0933296 │  0.108252 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 76, Training Time 14.94476s, 
+Training Total Loss 1902.428466796875, Training Mean Loss 7.519480228424072, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 76, Validation Time 1.02053s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137889 │ 0.182342 │ 0.258211 │ 0.0819064 │ 0.0931192 │  0.108159 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 77, Training Time 14.92995s, 
+Training Total Loss 1901.533935546875, Training Mean Loss 7.515944480895996, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 77, Validation Time 1.01591s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138328 │ 0.182386 │ 0.257574 │ 0.0820475 │ 0.0931633 │  0.108049 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 3 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 78, Training Time 14.92749s, 
+Training Total Loss 1900.409423828125, Training Mean Loss 7.511499881744385, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 78, Validation Time 1.01963s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138526 │ 0.183287 │  0.25764 │ 0.0824221 │ 0.0937107 │  0.108468 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 79, Training Time 14.93697s, 
+Training Total Loss 1899.7098388671875, Training Mean Loss 7.508734703063965, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 79, Validation Time 1.01425s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138064 │ 0.182254 │ 0.257882 │ 0.0819185 │ 0.0930712 │  0.108061 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 80, Training Time 14.95469s, 
+Training Total Loss 1899.728271484375, Training Mean Loss 7.50880765914917, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 80, Validation Time 1.43198s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.138152 │  0.18276 │ 0.257794 │ 0.0821616 │ 0.0934182 │  0.108284 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 81, Training Time 14.54841s, 
+Training Total Loss 1898.9344482421875, Training Mean Loss 7.505670070648193, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 81, Validation Time 1.43508s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137603 │ 0.182672 │ 0.257772 │ 0.0816804 │ 0.0930499 │  0.107945 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 3 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 82, Training Time 14.93723s, 
+Training Total Loss 1897.57373046875, Training Mean Loss 7.50029182434082, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 82, Validation Time 1.01906s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137449 │ 0.182825 │ 0.257046 │ 0.0819472 │ 0.0933922 │  0.108112 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 4 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 83, Training Time 14.92474s, 
+Training Total Loss 1897.0048828125, Training Mean Loss 7.498043537139893, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 83, Validation Time 1.01637s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137999 │ 0.183617 │ 0.258057 │ 0.0821051 │ 0.0935891 │  0.108331 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 5 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 84, Training Time 14.92871s, 
+Training Total Loss 1896.56982421875, Training Mean Loss 7.496323585510254, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 84, Validation Time 1.01476s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│  0.13802 │ 0.183287 │ 0.257508 │ 0.0820606 │ 0.0934748 │  0.108186 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 6 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 85, Training Time 14.94285s, 
+Training Total Loss 1895.7156982421875, Training Mean Loss 7.492947578430176, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 85, Validation Time 1.02459s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137383 │ 0.182606 │ 0.258827 │ 0.0820594 │ 0.0934454 │  0.108535 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 7 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 86, Training Time 14.94762s, 
+Training Total Loss 1895.0484619140625, Training Mean Loss 7.490310192108154, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 86, Validation Time 1.02538s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137141 │ 0.182694 │ 0.257991 │ 0.0820005 │ 0.0934939 │   0.10844 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 8 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 87, Training Time 14.93587s, 
+Training Total Loss 1894.672607421875, Training Mean Loss 7.488824844360352, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 87, Validation Time 1.01603s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137911 │ 0.182891 │ 0.257442 │ 0.0825093 │ 0.0938409 │  0.108619 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+save weight to /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 88, Training Time 15.32407s, 
+Training Total Loss 1893.88916015625, Training Mean Loss 7.4857282638549805, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 88, Validation Time 1.02679s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137295 │ 0.182166 │ 0.257002 │ 0.0821773 │ 0.0935035 │  0.108347 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 1 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 89, Training Time 14.93785s, 
+Training Total Loss 1893.4046630859375, Training Mean Loss 7.483813285827637, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 89, Validation Time 1.02361s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137955 │  0.18232 │  0.25742 │ 0.0822815 │ 0.0934865 │  0.108378 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 2 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 90, Training Time 14.93967s, 
+Training Total Loss 1892.1005859375, Training Mean Loss 7.478658676147461, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 90, Validation Time 1.02181s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136811 │ 0.183309 │ 0.257728 │ 0.0821103 │ 0.0938479 │  0.108581 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 3 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 91, Training Time 14.95295s, 
+Training Total Loss 1891.613525390625, Training Mean Loss 7.476733684539795, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 91, Validation Time 1.02051s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136679 │ 0.182298 │  0.25764 │ 0.0818231 │ 0.0933313 │  0.108259 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 4 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 92, Training Time 14.93797s, 
+Training Total Loss 1890.968505859375, Training Mean Loss 7.474184036254883, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 92, Validation Time 1.02284s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136657 │ 0.182716 │ 0.256628 │ 0.0820019 │ 0.0936237 │  0.108257 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 5 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 93, Training Time 14.93640s, 
+Training Total Loss 1890.4317626953125, Training Mean Loss 7.472062587738037, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 93, Validation Time 1.02488s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137273 │  0.18254 │ 0.256409 │ 0.0821413 │ 0.0935607 │  0.108201 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 6 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 94, Training Time 14.93375s, 
+Training Total Loss 1889.994384765625, Training Mean Loss 7.470334053039551, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 94, Validation Time 1.42622s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136504 │ 0.182562 │ 0.256782 │ 0.0819369 │  0.093552 │  0.108242 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 7 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 95, Training Time 14.55807s, 
+Training Total Loss 1888.859619140625, Training Mean Loss 7.465848445892334, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 95, Validation Time 1.42700s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.136613 │ 0.182694 │ 0.256716 │ 0.0819553 │  0.093586 │  0.108246 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 8 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 96, Training Time 14.93858s, 
+Training Total Loss 1888.0133056640625, Training Mean Loss 7.462503433227539, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 96, Validation Time 1.02873s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137229 │ 0.182628 │ 0.256804 │ 0.0824287 │  0.093903 │  0.108576 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 9 consecutive epochs. 
+
+-----------------***************** new epoch *****************-----------------
+
+Training Epoch 97, Training Time 14.93154s, 
+Training Total Loss 1888.37939453125, Training Mean Loss 7.4639506340026855, GPU RAM: 3.63 G/23.63 G
+Validation Epoch 97, Validation Time 1.03878s 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.137581 │ 0.182386 │ 0.256958 │ 0.0823924 │ 0.0936858 │  0.108449 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛
+The validation set score has not improved for 10 consecutive epochs. 
+Trigger early stop, the Epoch 87 is the best epoch of validation results, best_val_score is 0.08250926434993744.
+
+The training is over and the test begins.
+
+
+-----------------***************** Test *****************-----------------
+
+load weights from: /home/anonymous/projects/MMM4Rec/saved/MMM4Rec/Arts/2025-05-13_21-59-51/best_epoch_model.ckpt, resume epoch: 87, best val score: 0.08250926434993744
+Test Time 1.12297s 
+Test Metrics: 
+╒══════════╤══════════╤══════════╤═══════════╤═══════════╤═══════════╕
+│   Hit@10 │   Hit@20 │   Hit@50 │   NDCG@10 │   NDCG@20 │   NDCG@50 │
+╞══════════╪══════════╪══════════╪═══════════╪═══════════╪═══════════╡
+│ 0.121994 │ 0.162226 │ 0.231896 │ 0.0739805 │ 0.0841259 │  0.097908 │
+╘══════════╧══════════╧══════════╧═══════════╧═══════════╧═══════════╛

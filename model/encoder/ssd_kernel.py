@@ -55,17 +55,6 @@ def dual_ssd_discrete(X, dt, A, B, C, chunk_size=None, D=None, z=None, dt_bias=N
             raise ValueError(f'The dimension of D does not meet the requirements! {D.shape} must be [{n_heads}] or [{n_heads}, {d_head}]')
     return Y
 
-def get_attention_mask(item_seq, bidirectional=False):
-    """Generate left-to-right uni-directional or bidirectional attention mask for multi-head attention."""
-    attention_mask = item_seq != 0
-    extended_attention_mask = attention_mask.unsqueeze(1).unsqueeze(2)  # torch.bool
-    if not bidirectional:
-        extended_attention_mask = torch.tril(
-            extended_attention_mask.expand((-1, -1, item_seq.size(-1), -1))
-        )
-    extended_attention_mask = torch.where(extended_attention_mask, 0.0, -10000.0)
-    return extended_attention_mask
-
 
 if __name__ == '__main__':
     torch.manual_seed(42)

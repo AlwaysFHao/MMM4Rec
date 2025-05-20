@@ -9,12 +9,10 @@ from einops import repeat
 try:
     from .abstract import AbstractSRModel
     from .encoder.ssdv2 import TiSSDLayer, CoTiSSDLayer
-    from .loss.psl import PSL
     from .encoder.moe import MoE
 except:
     from encoder.ssdv2 import TiSSDLayer
     from abstract import AbstractSRModel
-    from loss.psl import PSL
     from encoder.moe import MoE
 
 
@@ -150,7 +148,6 @@ class MMM4Rec(AbstractSRModel):
         # tau = 1.0
         # if 'tau' in config.keys():
         #     tau = config['tau']
-        # self.loss_fct = PSL(activation=config['activation'], tau=tau)
 
         self.apply(self._init_weights)
 

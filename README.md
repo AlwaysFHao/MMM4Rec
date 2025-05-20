@@ -18,7 +18,7 @@ In the following, we will guide you how to use this repository step by step. �
 ### 2.1 Environment Requirements
 The following are the main runtime environment dependencies for running the repository：
 - linux (We use Ubuntu 22.0.4)
-- cuda 12.1
+- cuda 11.8
 - python 3.10.15
 - pytorch 2.3.1
 - numpy 1.26.4
@@ -164,6 +164,8 @@ cd ../../
 You can also directly examine the training logs in the [`📁 reference_log`](reference_log) folder to verify our work's effectiveness. 
 
 For example, check the [output.log](reference_log/scientific/with_id/2025-05-13_18-13-44/output.log) file to see ***MMM4Rec***'s fine-tuning logs in the `Scientific` domain.
+
+Alternatively, you can directly download our fine-tuned model weights and complete log files for downstream datasets via the anonymous link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88).
 
 ## 4. Acknowledgements
 Our implementation is built upon [Pytorch](https://github.com/pytorch/pytorch) and [Pytorch Lightning](https://github.com/Lightning-AI/pytorch-lightning) - we gratefully acknowledge their excellent work. 

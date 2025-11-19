@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-            
-# @Author : Anonymous
+# @Author : Hao Fan
 # @Time : 2025/5/8
 import torch
 from torch import nn

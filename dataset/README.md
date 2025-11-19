@@ -2,7 +2,7 @@
 
 *You can refer to this documentation to understand our dataset processing pipeline.*
 
-Due to the complexity and time-consuming nature of dataset processing, we strongly recommend downloading our preprocessed datasets directly via the anonymous link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88) for quick setup.
+Due to the complexity and time-consuming nature of dataset processing, we strongly recommend downloading our preprocessed datasets directly via the link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88) for quick setup.
 
 Below we describe how to use our provided dataset preprocessing pipeline:
 

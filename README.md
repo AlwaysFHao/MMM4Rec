@@ -165,7 +165,7 @@ You can also directly examine the training logs in the [`📁 reference_log`](re
 
 For example, check the [output.log](reference_log/scientific/with_id/2025-05-13_18-13-44/output.log) file to see ***MMM4Rec***'s fine-tuning logs in the `Scientific` domain.
 
-Alternatively, you can directly download our fine-tuned model weights and complete log files for downstream datasets via the anonymous link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88).
+Alternatively, you can directly download our fine-tuned model weights and complete log files for downstream datasets via the link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88).
 
 ## 4. Acknowledgements
 Our implementation is built upon [Pytorch](https://github.com/pytorch/pytorch) and [Pytorch Lightning](https://github.com/Lightning-AI/pytorch-lightning) - we gratefully acknowledge their excellent work. 

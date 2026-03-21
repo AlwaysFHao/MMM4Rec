@@ -1,13 +1,14 @@
 # Towards Transfer-Efficient Multi-modal Sequential Recommendation with State Space Duality
 
+*The code repository has been anonymized*
+
 ## 1. Introduction
 
   <p align="center">
     <img src="misc/mmm4rec.png" alt="overview_of_mmm4rec"/>
   </p>
 
-> **Towards Transfer-Efficient Multi-modal Sequential Recommendation with State Space Duality** \
-> Anonymous
+> **Towards Transfer-Efficient Multi-modal Sequential Recommendation with State Space Duality**
 
 We propose **MMM4Rec**(Multi-Modal Mamba for Sequential Recommendation), a transfer-efficient multimodal sequential recommendation model. By establishing intrinsic algebraic constraints that align with sequential recommendation principles, MMM4Rec eliminates the need for complex optimization objectives required by other multimodal sequential recommendation models. During both pre-training and fine-tuning, MMM4Rec is optimized solely using the standard cross-entropy loss. This unified and simplified optimization objective enables MMM4Rec to achieve rapid convergence when transferred to new domains.
 
@@ -164,11 +165,12 @@ You can also directly examine the training logs in the [`📁 reference_log`](re
 
 For example, check the [output.log](reference_log/scientific/with_id/2025-05-13_18-13-44/output.log) file to see ***MMM4Rec***'s fine-tuning logs in the `Scientific` domain.
 
-Alternatively, you can directly download our fine-tuned model weights and complete log files for downstream datasets via the anonymous link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88).
-
 ## 4. Acknowledgements
 Our implementation is built upon [Pytorch](https://github.com/pytorch/pytorch) and [Pytorch Lightning](https://github.com/Lightning-AI/pytorch-lightning) - we gratefully acknowledge their excellent work. 
 
 For dataset processing, we referenced approaches from [MMSRec](https://github.com/kz-song/MMSRec), [UniSRec](https://github.com/RUCAIBox/UniSRec), and [MISSRec](https://github.com/gimpong/MM23-MISSRec). Our trainer implementation draws inspiration from [RecBole](https://github.com/RUCAIBox/RecBole).
 
 Notably, we mathematically implemented an SSD kernel attention form ([`🐍 ssd_kernel.py`](model/encoder/ssd_kernel.py)) equivalent to [Mamba](https://github.com/state-spaces/mamba)'s approach.
+
+Finally, we sincerely thank the anonymous reviewers for their thorough evaluation of this work 🤗.
+

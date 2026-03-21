@@ -1,0 +1,54 @@
+seed: 2025
+
+# SASRec
+n_layers: 2
+n_heads: 2
+hidden_size: 256
+inner_size: 1024
+hidden_dropout_prob: 0.4
+attn_dropout_prob: 0.4
+hidden_act: "gelu"
+layer_norm_eps: 1e-12
+initializer_range: 0.02
+initializer_weight: [0.0, 1.0, 1.0]
+loss_type: "CE"
+# ID Contrast Learning
+temperature: 0.2
+# Placeholder Contrast Learning
+beta: 0.3
+phcl_temperature: 1.0
+phcl_weight: 1.0
+# Representation MoE
+expert_num: 4
+gate_selection: softmax
+start_expert_num: 4
+start_gate_selection: softmax
+# Temporal MoE
+temporal_expert_num: 4
+temporal_gate_selection: softmax
+interval_scale: 100
+
+# dataset config
+batch_size: 1024
+accumulation_steps: 1
+dataset_path: './dataset/amazon-2018/processed/Office'
+text_embed_path: 'dataset/amazon-2018/processed/Office/text_feat.pth'
+vision_embed_path: 'dataset/amazon-2018/processed/Office/image_feat.pth'
+cat_path: 'dataset/amazon-2018/processed/Office/cat.pt'
+interval_path: 'dataset/amazon-2018/processed/Office/max_interval.bin'
+daterange_path: 'dataset/amazon-2018/processed/Office/date_range.bin'
+
+max_len: 50
+
+# trainer config
+Epoch: 100
+optimizer_lr: 0.001
+weight_decay: 0.0
+stop_epoch: 10
+shuffle: False
+
+# eval config
+top_k: [10, 20, 50]
+metrics: ['Hit', 'NDCG']
+valid_metric: 'NDCG@10'
+metrics_table_displays: True

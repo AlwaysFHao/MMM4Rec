@@ -29,6 +29,7 @@ if __name__ == '__main__':
             data_path = os.path.join('../processed', sub_dataset, 'item.jsonl')
             if model == 'CLIP':
                 api = ClipExtractFeature(data_path, "openai/clip-vit-base-patch32", batch_size=512)
+                # api = ClipExtractFeature(data_path, "openai/clip-vit-large-patch14", batch_size=512)
             elif model == 'SigLIP':
                 api = SigLipExtractFeature(data_path, "google/siglip-base-patch16-224", batch_size=512)
             elif model == 'BLIP':

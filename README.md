@@ -7,8 +7,7 @@
   </p>
 
 > **Towards Transfer-Efficient Multi-modal Sequential Recommendation with State Space Duality** \
-> *Hao Fan, Qingyang Liu, Hongjiu Liu, Yanrong Hu, Kai Fang* \
-> ArXiv Preprint: [https://arxiv.org/abs/2506.02916](https://arxiv.org/abs/2506.02916)
+> Anonymous
 
 We propose **MMM4Rec**(Multi-Modal Mamba for Sequential Recommendation), a transfer-efficient multimodal sequential recommendation model. By establishing intrinsic algebraic constraints that align with sequential recommendation principles, MMM4Rec eliminates the need for complex optimization objectives required by other multimodal sequential recommendation models. During both pre-training and fine-tuning, MMM4Rec is optimized solely using the standard cross-entropy loss. This unified and simplified optimization objective enables MMM4Rec to achieve rapid convergence when transferred to new domains.
 
@@ -39,7 +38,7 @@ You can also view detailed environment information in file [environment.yaml](en
 ### 2.2 DataSets
 This study focuses on the [`🛒 Amazon Review 2018`](https://nijianmo.github.io/amazon/index.html) dataset.
 
-You can download our preprocessed dataset directly via the link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88) and extract the subfolders (e.g., `Scientific`) from the downloaded archive into the [`📁 dataset/📁 amazon-2018/📁 processed`](dataset/amazon-2018/processed) folder. 
+You can download our preprocessed dataset directly via the anonymous link [https://figshare.com/s/f7603ea556c23c2aef88](https://figshare.com/s/f7603ea556c23c2aef88) and extract the subfolders (e.g., `Scientific`) from the downloaded archive into the [`📁 dataset/📁 amazon-2018/📁 processed`](dataset/amazon-2018/processed) folder. 
 
 For detailed dataset preprocessing steps and descriptions, please refer to [`📁 dataset/Ⓜ️ READEM.md`](dataset/README.md).
 

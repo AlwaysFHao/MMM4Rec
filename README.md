@@ -172,18 +172,3 @@ Our implementation is built upon [Pytorch](https://github.com/pytorch/pytorch) a
 For dataset processing, we referenced approaches from [MMSRec](https://github.com/kz-song/MMSRec), [UniSRec](https://github.com/RUCAIBox/UniSRec), and [MISSRec](https://github.com/gimpong/MM23-MISSRec). Our trainer implementation draws inspiration from [RecBole](https://github.com/RUCAIBox/RecBole).
 
 Notably, we mathematically implemented an SSD kernel attention form ([`🐍 ssd_kernel.py`](model/encoder/ssd_kernel.py)) equivalent to [Mamba](https://github.com/state-spaces/mamba)'s approach.
-
-## 5. References
-If you find this code useful or use the toolkit in your work, please consider citing:
-
-```
-@misc{fan2025mmm4rec,
-      title={Towards Transfer-Efficient Multi-modal Sequential Recommendation with State Space Duality}, 
-      author={Hao Fan and Qingyang Liu and Hongjiu Liu and Yanrong Hu and Kai Fang},
-      year={2025},
-      eprint={2506.02916},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR},
-      url={https://arxiv.org/abs/2506.02916}, 
-}
-```

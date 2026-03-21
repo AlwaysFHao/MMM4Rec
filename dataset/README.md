@@ -112,7 +112,9 @@ cd ./amazon-2018/preprocess
 cd ../../
 ```
 
-Note: The script currently uses the **Scientific** domain as default. For other domains, modify the corresponding parameters in the shell script.
+Note: The script currently uses the **Scientific** domain as default. For other domains, modify the corresponding parameters `sub_dataset` in the shell script [`run.sh`](./amazon-2018/preprocess/run.sh).
+
+Update: We have now added data preprocessing support for **HM4SR**. Please modify the `is_cm4sr` parameter in the shell script to "True". 
 
 ## 5.Important Notes
 ### 5.3 Processing Variability

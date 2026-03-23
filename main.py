@@ -38,7 +38,7 @@ if __name__ == '__main__':
                                                                        num_workers=0)
 
     model = MMM4Rec(config)
-    from model.encoder.ssd import TiSSD, TiSSDLayer, CoTiSSD, CoTiSSDLayer, FeedForward
+    from model.encoder.ssdv2 import TiSSD, TiSSDLayer, CoTiSSD, CoTiSSDLayer, FeedForward
 
     save_model_classes = [TiSSD, TiSSDLayer, CoTiSSD, CoTiSSDLayer, FeedForward]
 

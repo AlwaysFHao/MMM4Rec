@@ -26,7 +26,7 @@ if __name__ == '__main__':
     train_dataloader = get_dataloader(config=config, dataset_class=AmazonSequentialDataset, num_workers=0, only_train=True)
 
     model = MMM4Rec(config)
-    from model.encoder.ssd import TiSSD, TiSSDLayer, CoTiSSD, CoTiSSDLayer, FeedForward
+    from model.encoder.ssdv2 import TiSSD, TiSSDLayer, CoTiSSD, CoTiSSDLayer, FeedForward
     save_model_classes = [TiSSD, TiSSDLayer, CoTiSSD, CoTiSSDLayer, FeedForward]
 
     optimizer_lr = config['optimizer_lr']

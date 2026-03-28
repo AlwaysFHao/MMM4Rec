@@ -324,8 +324,7 @@ class AmazonProcessor(object):
 
     def _prepare_category(self, metas, path, padding_idx=0):
         """
-        从商品元数据中提取类别信息，生成每个item的类别one-hot向量。
-        对应原始代码中的 prepare_category 函数。
+        hm4sr模型专属数据预处理方法： 从商品元数据中提取类别信息，生成每个item的类别one-hot向量。
         :param metas: 过滤后的商品元数据字典 {item_id: meta_dict}
         :param path: 子类别数据集根目录
         :param padding_idx: 填充索引，默认为0
@@ -335,15 +334,6 @@ class AmazonProcessor(object):
             raise ValueError("item2id mapping must be generated before preparing categories.")
 
         # 1. 加载商品元数据文件以获取原始类别信息
-        # 注意：您当前的metas是处理后的，只包含vision和text路径。
-        # 原始的类别信息在第一次调用load_meta_file得到的metas中。
-        # 为了获取类别，我们需要重新加载原始meta文件，或修改流程传递原始元信息。
-        # 这里我们假设有一个方法能获取到包含原始类别信息的meta字典 (raw_metas)。
-        # 由于在process方法中，原始的meta字典被过滤和覆盖了，我们需要调整流程。
-        # 建议：在process方法中，在过滤k-core之后，保存一份包含原始信息的metas_copy用于此处。
-        # 以下代码逻辑假设我们接收到的 `metas` 参数是包含原始类别信息的字典。
-        # 在后续的process方法修改中，我们会传入正确的数据。
-
         print(f"Preparing category features for {len(metas)} items.")
         cat_dict = {}  # 映射: item_id (新ID) -> 类别ID列表
         cat_type_dict = {}  # 映射: 原始类别字符串 -> 全局类别ID
@@ -409,7 +399,7 @@ class AmazonProcessor(object):
 
     def _calculate_time_stats(self, users, path):
         """
-        计算并保存时间相关的统计信息：
+        hm4sr模型专属数据预处理方法： 计算并保存时间相关的统计信息：
         1. 用户连续交互之间的最大时间间隔（取log2）。
         2. 整个数据集中最早和最晚的日期（按天计算）。
         对应原始代码中的 local_timestamp 和 local_minmax_day 函数。

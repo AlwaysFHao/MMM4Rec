@@ -117,10 +117,10 @@ Note: The script currently uses the **Scientific** domain as default. For other 
 Update: We have now added data preprocessing support for **HM4SR**. Please modify the `is_cm4sr` parameter in the shell script to "True". 
 
 ## 5.Important Notes
-### 5.3 Processing Variability
+### 5.1 Processing Variability
 The dataset processing uses set operations for deduplication, which may result in varying output ordering across different runs. However, This does not affect the dataset's equivalence. Experimental results may show minor fluctuations. 
 
-### 5.4 Image Downloading
+### 5.2 Image Downloading
 When downloading raw product images:
 
 - Network congestion may occur
